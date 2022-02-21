@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "gap_statistic"
+version = "0.1.0"
+description = "Code for calculating the GAP statistic described in for determining optimal clustering. Tibshirani et al. (2001) https://web.stanford.edu/~hastie/Papers/gap.pdf"
+authors = ["Jeffrey Werbin"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.7.6"
+numpy = "^1.22.2"
+scipy = "^1.8.0"
+pandas = "^1.4.1"
+sklearn = "^0.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
