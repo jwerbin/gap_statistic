@@ -21,7 +21,7 @@ import pandas as pd
 from scipy.spatial.distance import pdist, squareform
 from sklearn.decomposition import PCA
 from sklearn.base import clone
-from typing import Callable, Tuple
+from typing import Callable, Tuple, Union
 
 
 def calculate_cluster_D(data: pd.DataFrame) -> np.ndarray:
@@ -42,7 +42,7 @@ def calculate_W(data: pd.DataFrame) -> np.ndarray:
     return np.sum(w_r)
 
 
-def random_unif_sampling(data: pd.DataFrame or np.ndarray, original_cluster_labels) -> pd.DataFrame:
+def random_unif_sampling(data: Union[pd.DataFrame, np.ndarray], original_cluster_labels: np.ndarray) -> pd.DataFrame:
     # As described in the above paper the simplest approach is to randomly sample a value for each feature
     # from unif[feature_min, feature_max]
     shape = data.shape
@@ -51,7 +51,7 @@ def random_unif_sampling(data: pd.DataFrame or np.ndarray, original_cluster_labe
     return pd.DataFrame(np.hstack([np.random.uniform(mi, ma, size=(shape[0], 1)) for mi, ma in zip(mins, maxs)]))
 
 
-def hyperbox_sampling(data: pd.DataFrame, original_cluster_labels) -> pd.DataFrame:
+def hyperbox_sampling(data: Union[pd.DataFrame, np.ndarray], original_cluster_labels: np.ndarray) -> pd.DataFrame:
     # As described in Tibshirani.
     # select points randomly in the plane of the two principal components and then project back into real space
     # Todo modify to allow for n components
@@ -61,7 +61,7 @@ def hyperbox_sampling(data: pd.DataFrame, original_cluster_labels) -> pd.DataFra
     return pd.DataFrame(transformer.inverse_transform(projected_rand))
 
 
-def abc_sampling(data: pd.DataFrame, original_cluster_labels) -> pd.DataFrame:
+def abc_sampling(data: Union[pd.DataFrame, np.ndarray], original_cluster_labels: np.ndarray) -> pd.DataFrame:
     # A modification of hyperbox sampling from Tibshirani by SAS
     # https://documentation.sas.com/?docsetId=casstat&docsetTarget=casstat_kclus_details05.htm&docsetVersion=8.4&locale=en
     # performs hyperbox sampling around each cluster
@@ -79,7 +79,7 @@ def calculate_reference_W(data: pd.DataFrame, clusterer,
     return calculate_W(random_data)
 
 
-def gap_n(data: pd.DataFrame, clusterer, n_estimates) -> Tuple[float, float, np.ndarray]:
+def gap_n(data: pd.DataFrame, clusterer, n_estimates: int) -> Tuple[float, float, np.ndarray]:
     """
     Calculates the gap statistic
     inputs:
@@ -111,7 +111,7 @@ def gap_n(data: pd.DataFrame, clusterer, n_estimates) -> Tuple[float, float, np.
     return gap, std_reference_log_W, cluster_labels
 
 
-def calculate_optimal_clusters_by_gap(data: pd.DataFrame, clusterer_objs: dict, n_estimations=5,
+def calculate_optimal_clusters_by_gap(data: pd.DataFrame, clusterer_objs: dict, n_estimations: int =5,
                                       resampling_method: Callable = hyperbox_sampling):
     """
      Clusters data using KMeans clustering

@@ -17,8 +17,9 @@ Molecular Pathology, Diagnostics, and Therapeutics 2022
 import numpy as np
 import pandas as pd
 from sklearn import cluster
-from typing import List, Tuple
 import pytest
+
+from typing import List, Tuple, Union
 
 from gap_statistic import gap_statistic
 
@@ -80,7 +81,7 @@ def test_abc_sampling():
     points = np.array([[0, 0, 0], [-2, 0, 4], [0, 0, 5]])
 
 
-def make_clustered_data(means, stdevs, num_points):
+def make_clustered_data(means: List[np.ndarray], stdevs: List[np.ndarray], num_points: List[int]):
     points = []
     labels = []
     for i, (ms, stds, num) in enumerate(zip(means, stdevs, num_points)):
